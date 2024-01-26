@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from scapy.all import *
 
 def tcp_port_scanner(target_ip, port_range):
@@ -6,7 +8,7 @@ def tcp_port_scanner(target_ip, port_range):
         ip_packet = IP(dst=target_ip)
         tcp_packet = TCP(dport=port, flags="S")
 
-        # Sending packet and receiving response
+        # Sending packet and receiving response with a timeout
         response_packet = sr1(ip_packet / tcp_packet, timeout=1, verbose=0)
 
         if response_packet is not None:
@@ -17,7 +19,7 @@ def tcp_port_scanner(target_ip, port_range):
                 # Open port: Flag 0x12 (SYN-ACK) received
                 if flags == 0x12:
                     print(f"Port {port} is open")
-                    
+
                     # Send RST packet to gracefully close the open connection
                     rst_packet = IP(dst=target_ip) / TCP(dport=port, flags="R")
                     send(rst_packet, verbose=0)
