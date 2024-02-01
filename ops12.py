@@ -29,42 +29,44 @@ def tcp_port_scanner(target_ip, port_range):
                 else:
                     print(f"Port {port} is filtered and connection is silently dropped")
 
-def icmp_ping_sweep(network_address):
-    # Use scapy's method to generate a list of all addresses in the given network
-    addresses = [str(ip) for ip in IP(network_address).hosts()]
-
-    online_hosts = 0
-
-    for address in addresses:
-        # Skip network address and broadcast address
-        if address.endswith('.0') or address.endswith('.255'):
-            continue
-
-        # Crafting ICMP Echo Request packet
-        icmp_packet = IP(dst=address) / ICMP()
-
-        # Sending packet and receiving response
-        response_packet = sr1(icmp_packet, timeout=1, verbose=0)
-
-        if response_packet is None:
-            print(f"Host {address} is down or unresponsive.")
-        elif response_packet.haslayer(ICMP):
-            icmp_type = response_packet[ICMP].type
-            icmp_code = response_packet[ICMP].code
-
-            # ICMP Type 3 and Code 1,2,3,9,10,13 indicates actively blocking ICMP traffic
-            if icmp_type == 3 and icmp_code in [1, 2, 3, 9, 10, 13]:
-                print(f"Host {address} is actively blocking ICMP traffic.")
-            else:
-                print(f"Host {address} is responding.")
-                online_hosts += 1
-
-    print(f"\nTotal online hosts: {online_hosts}")
+# Commenting out ICMP ping sweep function
+# def icmp_ping_sweep(network_address):
+#     # Use scapy's method to generate a list of all addresses in the given network
+#     addresses = [str(ip) for ip in IP(network_address).hosts()]
+#
+#     online_hosts = 0
+#
+#     for address in addresses:
+#         # Skip network address and broadcast address
+#         if address.endswith('.0') or address.endswith('.255'):
+#             continue
+#
+#         # Crafting ICMP Echo Request packet
+#         icmp_packet = IP(dst=address) / ICMP()
+#
+#         # Sending packet and receiving response
+#         response_packet = sr1(icmp_packet, timeout=1, verbose=0)
+#
+#         if response_packet is None:
+#             print(f"Host {address} is down or unresponsive.")
+#         elif response_packet.haslayer(ICMP):
+#             icmp_type = response_packet[ICMP].type
+#             icmp_code = response_packet[ICMP].code
+#
+#             # ICMP Type 3 and Code 1,2,3,9,10,13 indicates actively blocking ICMP traffic
+#             if icmp_type == 3 and icmp_code in [1, 2, 3, 9, 10, 13]:
+#                 print(f"Host {address} is actively blocking ICMP traffic.")
+#             else:
+#                 print(f"Host {address} is responding.")
+#                 online_hosts += 1
+#
+#     print(f"\nTotal online hosts: {online_hosts}")
 
 def main():
     print("Network Security Tool Menu:")
     print("1. TCP Port Range Scanner")
-    print("2. ICMP Ping Sweep")
+    # Commenting out ICMP Ping Sweep option
+    # print("2. ICMP Ping Sweep")
     choice = int(input("Enter your choice (1 or 2): "))
 
     if choice == 1:
@@ -72,14 +74,16 @@ def main():
         target_ip = input("Enter the target IP address: ")
         port_range_to_scan = tuple(map(int, input("Enter the port range (start end): ").split()))
         tcp_port_scanner(target_ip, port_range_to_scan)
-    elif choice == 2:
-        # ICMP Ping Sweep mode
-        network_address = input("Enter the network address with CIDR block (e.g., 10.10.0.0/24): ")
-        icmp_ping_sweep(network_address)
+    # Commenting out ICMP Ping Sweep option
+    # elif choice == 2:
+    #     # ICMP Ping Sweep mode
+    #     network_address = input("Enter the network address with CIDR block (e.g., 10.10.0.0/24): ")
+    #     icmp_ping_sweep(network_address)
     else:
         print("Invalid choice. Exiting.")
 
 if __name__ == "__main__":
     main()
+
 
 Resoource - CHATGPT
