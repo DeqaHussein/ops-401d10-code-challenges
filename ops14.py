@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import time
 
 def offensive_mode(wordlist_path):
